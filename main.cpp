@@ -339,14 +339,19 @@ bool unpackFile(spiffs_dirent *spiffsFile, const char *destPath) {
 
     // Open file.
     FILE* dst = fopen(destPath, "wb");
-
-    // Write content into file.
-    fwrite(buffer, sizeof(u8_t), sizeof(buffer), dst);
-
-    // Close file.
-    fclose(dst);
-
-
+	
+    if(dst == NULL)
+    {
+        /*Added due to improper handling of "." */
+         std::cout << "Failed to open file, is this the current folder representation \".\"? Ignoring..." << std::endl;
+    }
+    else
+    {
+        // Write content into file.
+        fwrite(buffer, sizeof(u8_t), sizeof(buffer), dst);
+        // Close file.
+        fclose(dst);
+    }
     return true;
 }
 
